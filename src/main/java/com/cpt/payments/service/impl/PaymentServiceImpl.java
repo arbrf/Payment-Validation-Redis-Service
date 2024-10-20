@@ -57,13 +57,20 @@ public class PaymentServiceImpl implements PaymentService {
 
 	@Autowired
 	private HttpRestTemplateEngine httpRestTemplateEngine;
+	
+	@Autowired
+	private RedisService redisService;
 
 	@Override
 	public PaymentResponse validateAndInitiatePayment(PaymentRequest paymentRequest) {
 		LogMessage.log(LOGGER, " validators are -> " + validators);
 
-		List<String> validatorList = Stream.of(validators.split(",")).collect(Collectors.toList());
-
+		//List<String> validatorList = Stream.of(validators.split(",")).collect(Collectors.toList());
+		List<String> validatorList = redisService.fetchValuesFromRedis("my-list5");
+        
+         //List<String> validator2=redisService.fetchValuesFromRedis("my-list");
+         //System.out.println("Validator from redis"+validator2);
+         //LogMessage.log(LOGGER, " Validator from redis -> " + validator2);
 		validatorList.forEach(validator -> {
 			ValidatorEnum validatorEnum = ValidatorEnum.getEnumByString(validator);
 			
